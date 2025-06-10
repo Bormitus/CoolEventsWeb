@@ -1,0 +1,73 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+<head>
+    <title>Event Detail</title>
+</head>
+
+<section layout:fragment="body">
+    <header class="py-5 bg-light border-bottom mb-4">
+        <div class="container">
+            <div class="text-center my-5">
+                <h1 class="fw-bolder" th:text="${event.title}"></h1>
+                <p class="lead mb-0" th:text="${event.location}"></p>
+            </div>
+        </div>
+    </header>
+    <!-- Page content-->
+    <div class="container">
+        <div class="row">
+            <!-- Blog entries-->
+            <div class="col-lg-8">
+                <!-- Featured blog post-->
+                <div class="card mb-4">
+                    <a><img class="card-img-top" th:src="${event.photoUrl}" alt="..."/></a>
+                    <div class="card-body">
+                        <div class="small text-muted" th:text="${event.createdOn}"></div>
+                        <h2 class="card-title">About this event</h2>
+                        <p class="card-text" th:text="${event.description}"></p>
+                        <p class="card-text" th:href="${event.orgSite}"></p>
+
+                        <div th:if="${user.id} == ${event.createdBy.id}">
+                            <a class="btn btn-primary" th:href="@{/event/{eventId}/edit(eventId=${event.id})}">Edit</a>
+                            <form th:action="@{/event/{eventId}/delete(eventId=${event.id})}" method="post"
+                                  style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            <a class="btn btn-primary" th:href="@{/activity/{eventId}/create(eventId=${event.id})}">Create
+                                Activity</a>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Nested row for non-featured blog posts-->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <!-- Blog post-->
+                        <div th:each="activity :${event.activities}" class="card mb-4">
+                            <div class="card-body">
+                                <div class="small text-muted">January 1, 2022</div>
+                                <a th:text="${activity.name}" class="card-title h4"
+                                   th:href="@{/activity/{activityId}(activityId=${activity.id})}"></a>
+                                <a th:href="@{/activity/{activityId}(activityId=${activity.id})}"
+                                   class="btn btn-primary">More</a>
+                                <div th:if="${user.id} == ${event.createdBy.id}">
+                                    <a th:href="@{/activity/{activityId}/edit(activityId=${activity.id})}"
+                                       class="btn btn-primary">Edit</a>
+                                    <form th:action="@{/activity/{activityId}/delete(activityId=${activity.id})}"
+                                          method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+</html>
