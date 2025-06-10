@@ -22,7 +22,6 @@ public class ActivityDto {
     @Size(max = 100, message = "Activity name must not exceed 100 characters")
     private String name;
 
-    @NotBlank(message = "Speaker name must not be blank")
     @Size(max = 100, message = "Speaker name must not exceed 100 characters")
     private String speaker;
 

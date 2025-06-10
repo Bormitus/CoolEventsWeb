@@ -10,39 +10,43 @@
     <header class="py-5 bg-light border-bottom mb-4">
         <div class="container">
             <div class="text-center my-5">
-                <h1 class="fw-bolder" th:text="${activity.name}"></h1>
+                <h1 class="fw-bolder" th:text="${activity.name}">Activity Name</h1>
             </div>
         </div>
     </header>
-    <!-- Page content-->
+
+    <!-- Page content -->
     <div class="container">
-        <div class="row">
-            <!-- Blog entries-->
+        <div class="row justify-content-center">
             <div class="col-lg-8">
-                <!-- Featured blog post-->
-                <div class="card mb-4">
+                <div class="card mb-4 shadow-sm">
                     <div class="card-body">
-                        <div class="small text-muted" th:text="${activity.createdOn}"></div>
-                        <div class="small text-muted" th:text="${activity.updatedOn}"></div>
-                        <h2 class="card-title">About this activity</h2>
-                        <p class="card-text" th:text="${activity.speaker}"></p>
-                        <p class="card-text" th:text="${activity.startTime}"></p>
-                        <p class="card-text" th:text="${activity.endTime}"></p>
+                        <div class="d-flex justify-content-between mb-3 text-muted small">
+                            <span th:text="${activity.createdOn}">Created On</span>
+                            <span th:text="${activity.updatedOn}">Updated On</span>
+                        </div>
 
+                        <h2 class="card-title mb-3">About this activity</h2>
 
-                        <div th:if="${user.id} == ${activity.event.createdBy.id}">
-                            <a class="btn btn-primary"
-                               th:href="@{/activity/{activityId}/delete(activityId=${activity.id})}">Delete</a>
-                            <a class="btn btn-primary"
+                        <p><strong>Speaker:</strong> <span th:text="${activity.speaker}">Speaker Name</span></p>
+                        <p><strong>Start Time:</strong> <span th:text="${activity.startTime}">Start Time</span></p>
+                        <p><strong>End Time:</strong> <span th:text="${activity.endTime}">End Time</span></p>
+
+                        <div class="mt-4" th:if="${user != null and user.id == activity.event.createdBy.id}">
+                            <a class="btn btn-warning me-2"
                                th:href="@{/activity/{activityId}/edit(activityId=${activity.id})}">Edit</a>
-                            <form th:action="@{/activity/{activityId}/delete(activityId=${activity.id})}" method="post" style="display:inline;">
+
+                            <form th:action="@{/activity/{activityId}/delete(activityId=${activity.id})}" method="post"
+                                  style="display:inline;">
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
-
                         </div>
-                        <a th:href="@{/event/{eventId}(eventId=${activity.event.id})}" class="btn btn-primary">Go To
-                            Associated Event</a>
 
+                        <div class="mt-4">
+                            <a th:href="@{/event/{eventId}(eventId=${activity.event.id})}" class="btn btn-primary">
+                                Go To Associated Event
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

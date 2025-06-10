@@ -10,63 +10,82 @@
     <header class="py-5 bg-light border-bottom mb-4">
         <div class="container">
             <div class="text-center my-5">
-                <h1 class="fw-bolder" th:text="${event.title}"></h1>
-                <p class="lead mb-0" th:text="${event.location}"></p>
+                <h1 class="fw-bolder" th:text="${event.title}">Event Title</h1>
+                <p class="lead mb-0" th:text="${event.location}">Event Location</p>
             </div>
         </div>
     </header>
+
     <!-- Page content-->
     <div class="container">
         <div class="row">
-            <!-- Blog entries-->
+            <!-- Main content -->
             <div class="col-lg-8">
-                <!-- Featured blog post-->
-                <div class="card mb-4">
-                    <a><img class="card-img-top" th:src="${event.photoUrl}" alt="..."/></a>
-                    <div class="card-body">
-                        <div class="small text-muted" th:text="${event.createdOn}"></div>
-                        <h2 class="card-title">About this event</h2>
-                        <p class="card-text" th:text="${event.description}"></p>
-                        <p class="card-text" th:href="${event.orgSite}"></p>
+                <!-- Event card -->
+                <div class="card mb-4 shadow-sm">
+                    <a href="#" th:href="${event.orgSite}" target="_blank" rel="noopener noreferrer">
+                        <img class="card-img-top" th:src="${event.photoUrl}" alt="Event Photo"
+                             style="max-width: 400px; max-height: 500px; " />
 
-                        <div th:if="${user.id} == ${event.createdBy.id}">
-                            <a class="btn btn-primary" th:href="@{/event/{eventId}/edit(eventId=${event.id})}">Edit</a>
+                    </a>
+                    <div class="card-body">
+                        <span th:text="${event.createdOn != null ? #temporals.format(event.createdOn, 'dd MMM yyyy') : 'Date not specified'}"></span>
+
+
+                        <h2 class="card-title mb-3">About this event</h2>
+                        <p class="card-text" th:text="${event.description}">Event description...</p>
+
+                        <a class="btn btn-outline-primary mb-3" th:href="${event.orgSite}" target="_blank"
+                           th:text="${event.orgSite}">Official Website</a>
+
+                        <div th:if="${user != null and user.id == event.createdBy.id}">
+                            <a class="btn btn-primary me-2 mb-2"
+                               th:href="@{/event/{eventId}/edit(eventId=${event.id})}">Edit</a>
+
                             <form th:action="@{/event/{eventId}/delete(eventId=${event.id})}" method="post"
                                   style="display:inline;">
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger me-2 mb-2">Delete</button>
                             </form>
-                            <a class="btn btn-primary" th:href="@{/activity/{eventId}/create(eventId=${event.id})}">Create
-                                Activity</a>
-                        </div>
 
+                            <a class="btn btn-success mb-2"
+                               th:href="@{/activity/{eventId}/create(eventId=${event.id})}">Create Activity</a>
+                        </div>
                     </div>
                 </div>
-                <!-- Nested row for non-featured blog posts-->
-                <div class="row">
-                    <div class="col-lg-6">
-                        <!-- Blog post-->
-                        <div th:each="activity :${event.activities}" class="card mb-4">
-                            <div class="card-body">
-                                <div class="small text-muted">January 1, 2022</div>
-                                <a th:text="${activity.name}" class="card-title h4"
-                                   th:href="@{/activity/{activityId}(activityId=${activity.id})}"></a>
-                                <a th:href="@{/activity/{activityId}(activityId=${activity.id})}"
-                                   class="btn btn-primary">More</a>
-                                <div th:if="${user.id} == ${event.createdBy.id}">
-                                    <a th:href="@{/activity/{activityId}/edit(activityId=${activity.id})}"
-                                       class="btn btn-primary">Edit</a>
-                                    <form th:action="@{/activity/{activityId}/delete(activityId=${activity.id})}"
-                                          method="post" style="display:inline;">
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
 
+                <!-- Activities -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h3 class="mb-3">Activities</h3>
+                        <div th:if="${#lists.isEmpty(event.activities)}">
+                            <p>No activities available.</p>
+                        </div>
+                        <div th:each="activity : ${event.activities}" class="card mb-3 shadow-sm">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h4 class="card-title mb-1">
+                                        <a th:text="${activity.name}"
+                                           th:href="@{/activity/{activityId}(activityId=${activity.id})}">Activity</a>
+                                    </h4>
+                                </div>
+                                <div>
+                                    <a th:href="@{/activity/{activityId}(activityId=${activity.id})}"
+                                       class="btn btn-outline-primary me-2">More</a>
+                                    <div th:if="${user != null and user.id == event.createdBy.id}" style="display:inline;">
+                                        <a th:href="@{/activity/{activityId}/edit(activityId=${activity.id})}"
+                                           class="btn btn-primary me-2">Edit</a>
+                                        <form th:action="@{/activity/{activityId}/delete(activityId=${activity.id})}"
+                                              method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 </section>
